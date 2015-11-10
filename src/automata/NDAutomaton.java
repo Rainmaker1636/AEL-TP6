@@ -2,11 +2,11 @@ package automata;
 
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -108,7 +108,7 @@ public class NDAutomaton extends AbstractAutomaton implements Recognizer, Automa
 		return valRet;
 	}
 	
-	public NDAutomaton deterministic(){
+	/*public NDAutomaton deterministic(){
 		NDAutomaton newDeterministic = new NDAutomaton();
 		newDeterministic.alphabet = this.alphabet;
 		HashMap<Set<State>,State> stateHash = new HashMap<Set<State>,State>();
@@ -149,18 +149,58 @@ public class NDAutomaton extends AbstractAutomaton implements Recognizer, Automa
 			passing = stateHash.keySet();
 			passing.removeAll(alreadyPassed);
 		}
-		
-		
-		
 		return newDeterministic;
+	}*/
+	
+	public NDAutomaton deterministic(){
+		NDAutomaton dAutomaton = new NDAutomaton();
+		HashMap<Set<State>, State> hashMap = new HashMap<Set<State>, State>();
+		List<Set<State>> stateList = new ArrayList<Set<State>>();
+		Set<State> nextSetState ;
+		State deterministState ;
+		for(State initialState : this.initialStates){
+			nextSetState = new PrintSet<State>();
+			nextSetState.add(initialState);
+			stateList.add(nextSetState);
+			deterministState = dAutomaton.addNewState();
+			dAutomaton.setInitial(deterministState);
+			hashMap.put(nextSetState, deterministState);
+		}
+		
+		while(!stateList.isEmpty()){
+			Set<State> tmp = stateList.remove(0);
+			for(Character letter : this.alphabet){
+				nextSetState = getFollowingSet(tmp, letter);
+				if(!nextSetState.isEmpty()){
+					if(!hashMap.containsKey(nextSetState)){
+						deterministState = dAutomaton.addNewState();
+						hashMap.put(nextSetState, deterministState);
+						stateList.add(nextSetState);
+					}
+					if(this.isSetStateAccepting(nextSetState)) dAutomaton.setAccepting(hashMap.get(nextSetState));
+					/*if(this.isSetStateInitial(nextSetState)) dAutomaton.setInitial(hashMap.get(nextSetState));*/
+					dAutomaton.addTransition(hashMap.get(tmp), letter, hashMap.get(nextSetState));
+				}
+			}
+		}
+		return dAutomaton;
 	}
 	
-	private boolean isSetStateInitial(Set<State> stateSet){
+	private Set<State> getFollowingSet(Set<State> states, Character c){
+		Set<State> stateList = new PrintSet<State>();
+		for(State state : states){
+			stateList.addAll(this.getTransitionSet(state, c));
+		}
+		return stateList;
+		
+	}
+	
+	/*private boolean isSetStateInitial(Set<State> stateSet){
 		if(stateSet.isEmpty()) return false;
 		for(State state : stateSet)
 			if(this.isInitial(state)) return true;
 		return false;
-	}
+	}*/
 	
 	private boolean isSetStateAccepting(Set<State> stateSet){
 		if(stateSet.isEmpty()) return false;

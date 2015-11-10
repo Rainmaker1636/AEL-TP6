@@ -30,8 +30,7 @@ public class testNDAutomaton {
 			testAutomate.setAccepting(etats.get(4));
 		} catch (StateException e) {
 			e.printStackTrace();
-		}
-		
+		}		
 	}
 	
 	@Test
@@ -54,9 +53,26 @@ public class testNDAutomaton {
 	
 	@Test
 	public void testDeterminist(){
-		this.createAutomate();
-		System.out.println(this.testAutomate.toGraphviz());
-		System.out.println(this.testAutomate.deterministic().toGraphviz());		
+		NDAutomaton testAutomate = new NDAutomaton();
+		List<State> etats = new ArrayList<State>();
+
+		try {
+			for(int i = 0; i< 3;i++){
+				etats.add(testAutomate.addNewState());
+			}
+			
+			testAutomate.setInitial(etats.get(0));
+			testAutomate.addTransition(etats.get(0), 'b', etats.get(0));
+			testAutomate.addTransition(etats.get(0), 'a', etats.get(1));
+			testAutomate.addTransition(etats.get(1), 'a', etats.get(2));
+			testAutomate.addTransition(etats.get(1), 'a', etats.get(0));
+			
+			testAutomate.setAccepting(etats.get(2));
+		} catch (StateException e) {
+			e.printStackTrace();
+		}		
+		System.out.println(testAutomate.toGraphviz());
+		System.out.println(testAutomate.deterministic().toGraphviz());		
 	}
 
 }
