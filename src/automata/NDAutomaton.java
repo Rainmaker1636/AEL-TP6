@@ -178,7 +178,6 @@ public class NDAutomaton extends AbstractAutomaton implements Recognizer, Automa
 						stateList.add(nextSetState);
 					}
 					if(this.isSetStateAccepting(nextSetState)) dAutomaton.setAccepting(hashMap.get(nextSetState));
-					/*if(this.isSetStateInitial(nextSetState)) dAutomaton.setInitial(hashMap.get(nextSetState));*/
 					dAutomaton.addTransition(hashMap.get(tmp), letter, hashMap.get(nextSetState));
 				}
 			}
@@ -194,13 +193,6 @@ public class NDAutomaton extends AbstractAutomaton implements Recognizer, Automa
 		return stateList;
 		
 	}
-	
-	/*private boolean isSetStateInitial(Set<State> stateSet){
-		if(stateSet.isEmpty()) return false;
-		for(State state : stateSet)
-			if(this.isInitial(state)) return true;
-		return false;
-	}*/
 	
 	private boolean isSetStateAccepting(Set<State> stateSet){
 		if(stateSet.isEmpty()) return false;
