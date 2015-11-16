@@ -1,19 +1,20 @@
 package automata;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
-public class testNDAutomaton {
+public class TestDAutomaton {
 	
-	private NDAutomaton testAutomate;
+	private DAutomaton testAutomate;
 	
 	private void createAutomate(){
 		List<State> etats = new ArrayList<State>();
-		testAutomate = new NDAutomaton();
+		testAutomate = new DAutomaton();
 		try {
 			for(int i = 0; i< 7;i++){
 				etats.add(testAutomate.addNewState());
@@ -33,6 +34,7 @@ public class testNDAutomaton {
 		}		
 	}
 	
+	
 	@Test
 	public void returnsTrueWordAccepted() {
 		this.createAutomate();
@@ -51,28 +53,11 @@ public class testNDAutomaton {
 		assertFalse(this.testAutomate.accept("prout"));
 	}
 	
-	@Test
-	public void testDeterminist(){
-		NDAutomaton testAutomate = new NDAutomaton();
-		List<State> etats = new ArrayList<State>();
-
-		try {
-			for(int i = 0; i< 3;i++){
-				etats.add(testAutomate.addNewState());
-			}
-			
-			testAutomate.setInitial(etats.get(0));
-			testAutomate.addTransition(etats.get(0), 'b', etats.get(0));
-			testAutomate.addTransition(etats.get(0), 'a', etats.get(1));
-			testAutomate.addTransition(etats.get(1), 'a', etats.get(2));
-			testAutomate.addTransition(etats.get(1), 'a', etats.get(0));
-			
-			testAutomate.setAccepting(etats.get(2));
-		} catch (StateException e) {
-			e.printStackTrace();
-		}		
-		System.out.println(testAutomate.toGraphviz());
-		System.out.println(testAutomate.deterministic().toGraphviz());		
+	@Test(expected = IllegalStateException.class)
+	public void throwsExceptionByAddingInitialWhenOneDefined(){
+		this.createAutomate();
+		State state = this.testAutomate.addNewState();
+		this.testAutomate.setInitial(state);
 	}
 
 }
