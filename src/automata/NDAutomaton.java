@@ -107,50 +107,7 @@ public class NDAutomaton extends AbstractAutomaton implements Recognizer, Automa
 			valRet |= this.acceptUtil(state, word.substring(1));
 		return valRet;
 	}
-	
-	/*public NDAutomaton deterministic(){
-		NDAutomaton newDeterministic = new NDAutomaton();
-		newDeterministic.alphabet = this.alphabet;
-		HashMap<Set<State>,State> stateHash = new HashMap<Set<State>,State>();
-		for(State ndState : this.states){
-			Set<State> setNDState = new PrintSet<State>();
-			setNDState.add(ndState);
-			State newDeterminsticState = newDeterministic.addNewState();
-			if(this.isInitial(ndState)) newDeterministic.setInitial(newDeterminsticState);
-			if(this.isAccepting(ndState)) newDeterministic.setAccepting(newDeterminsticState);
-		}
-		Set<Set<State>> alreadyPassed = new PrintSet<Set<State>>();
-		Set<Set<State>> passing = stateHash.keySet();
-		passing.removeAll(alreadyPassed);
-		while(!passing.isEmpty()){
-			Iterator<Set<State>> it = passing.iterator();
-			while(it.hasNext()){
-				Set<State> key = it.next();
-				State newDState = null ;
-				if(!alreadyPassed.contains(key)){
-					alreadyPassed.add(key);
-					for(Character c : this.alphabet){
-						Set<State> nextKey = new PrintSet<State>();
-						for(State state : key){
-							Set<State> followingStates = this.getTransitionSet(state, c);
-							for(State remplirSet : followingStates)
-								nextKey.add(remplirSet);
-						}
-						if(!nextKey.isEmpty() && !stateHash.containsKey(nextKey)){
-							newDState = newDeterministic.addNewState();
-							if(this.isSetStateAccepting(nextKey)) newDeterministic.setAccepting(newDState);
-							if(this.isSetStateInitial(nextKey)) newDeterministic.setAccepting(newDState);
-							stateHash.put(nextKey, newDState);
-							newDeterministic.addTransition(stateHash.get(key), c, newDState);
-						}
-					}
-				}
-			}
-			passing = stateHash.keySet();
-			passing.removeAll(alreadyPassed);
-		}
-		return newDeterministic;
-	}*/
+
 	
 	public NDAutomaton deterministic(){
 		NDAutomaton dAutomaton = new NDAutomaton();
@@ -178,7 +135,6 @@ public class NDAutomaton extends AbstractAutomaton implements Recognizer, Automa
 						stateList.add(nextSetState);
 					}
 					if(this.isSetStateAccepting(nextSetState)) dAutomaton.setAccepting(hashMap.get(nextSetState));
-					/*if(this.isSetStateInitial(nextSetState)) dAutomaton.setInitial(hashMap.get(nextSetState));*/
 					dAutomaton.addTransition(hashMap.get(tmp), letter, hashMap.get(nextSetState));
 				}
 			}
@@ -191,16 +147,8 @@ public class NDAutomaton extends AbstractAutomaton implements Recognizer, Automa
 		for(State state : states){
 			stateList.addAll(this.getTransitionSet(state, c));
 		}
-		return stateList;
-		
+		return stateList;	
 	}
-	
-	/*private boolean isSetStateInitial(Set<State> stateSet){
-		if(stateSet.isEmpty()) return false;
-		for(State state : stateSet)
-			if(this.isInitial(state)) return true;
-		return false;
-	}*/
 	
 	private boolean isSetStateAccepting(Set<State> stateSet){
 		if(stateSet.isEmpty()) return false;
