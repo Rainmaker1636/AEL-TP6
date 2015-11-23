@@ -8,5 +8,5 @@ package automata;
  *
  */
 public class AhoCorasick extends DAutomaton {
-
+	
 }
